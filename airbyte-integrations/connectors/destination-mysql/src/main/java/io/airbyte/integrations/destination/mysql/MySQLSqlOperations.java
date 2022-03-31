@@ -17,8 +17,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MySQLSqlOperations extends JdbcSqlOperations {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MySQLSqlOperations.class);
 
   private boolean isLocalFileEnabled = false;
 
@@ -134,6 +138,12 @@ public class MySQLSqlOperations extends JdbcSqlOperations {
             + "%s TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6)\n"
             + ");\n",
         schemaName, tableName, JavaBaseConstants.COLUMN_NAME_AB_ID, JavaBaseConstants.COLUMN_NAME_DATA, JavaBaseConstants.COLUMN_NAME_EMITTED_AT);
+  }
+
+  @Override
+  public void createSchemaIfNotExists(final JdbcDatabase database, final String schemaName) throws Exception {
+    LOGGER.info("Schema name: {}", schemaName);
+    super.createSchemaIfNotExists(database, "`"+schemaName+"`");
   }
 
   public static class VersionCompatibility {

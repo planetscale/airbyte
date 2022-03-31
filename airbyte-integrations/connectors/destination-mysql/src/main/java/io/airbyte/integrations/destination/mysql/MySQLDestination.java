@@ -60,7 +60,7 @@ public class MySQLDestination extends AbstractJdbcDestination implements Destina
     try (final JdbcDatabase database = getDatabase(config)) {
       final MySQLSqlOperations mySQLSqlOperations = (MySQLSqlOperations) getSqlOperations();
 
-      final String outputSchema = getNamingResolver().getIdentifier(config.get(DATABASE_KEY).asText());
+      final String outputSchema = config.get(DATABASE_KEY).asText();
       attemptSQLCreateAndDropTableOperations(outputSchema, database, getNamingResolver(),
           mySQLSqlOperations);
 

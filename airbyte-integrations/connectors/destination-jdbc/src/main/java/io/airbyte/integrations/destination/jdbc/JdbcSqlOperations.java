@@ -25,9 +25,13 @@ import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public abstract class JdbcSqlOperations implements SqlOperations {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(JdbcSqlOperations.class);
 
   protected static final String SHOW_SCHEMAS = "show schemas;";
   protected static final String NAME = "name";
@@ -47,6 +51,7 @@ public abstract class JdbcSqlOperations implements SqlOperations {
   @Override
   public void createSchemaIfNotExists(final JdbcDatabase database, final String schemaName) throws Exception {
     if (!schemaSet.contains(schemaName) && !isSchemaExists(database, schemaName)) {
+      LOGGER.info("Trying to create schema {} ", schemaName);
       AirbyteSentry.executeWithTracing("CreateSchema",
           () -> database.execute(String.format("CREATE SCHEMA IF NOT EXISTS %s;", schemaName)),
           Map.of("schema", schemaName));
